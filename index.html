@@ -5,7 +5,6 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Countdown Stopwatch</title>
   <style>
-    /* Reset body margin and padding */
     body {
       display: flex;
       flex-direction: column;
@@ -18,42 +17,39 @@
       text-align: center;
     }
 
-    /* Style the stopwatch display */
     .stopwatch {
-      font-size: 5vw; /* Use viewport width for responsive font size */
+      font-size: 5vw;
       margin-bottom: 20px;
     }
 
-    /* Style the message section */
     .message {
-      font-size: 4vw; /* Use viewport width for responsive font size */
+      font-size: 4vw;
       color: #333;
       padding: 0 20px;
       line-height: 1.6;
-      max-width: 90%; /* Ensure message content fits on small screens */
+      max-width: 90%;
       word-wrap: break-word;
     }
 
-    /* Media queries for small screens */
     @media (max-width: 768px) {
       .stopwatch {
-        font-size: 8vw; /* Adjust font size for small screens */
+        font-size: 8vw;
       }
 
       .message {
-        font-size: 5vw; /* Adjust message font size for mobile */
-        padding: 0 10px; /* Reduce padding on mobile */
+        font-size: 5vw;
+        padding: 0 10px;
       }
     }
 
     @media (max-width: 480px) {
       .stopwatch {
-        font-size: 10vw; /* Make stopwatch even bigger on very small screens */
+        font-size: 10vw;
       }
 
       .message {
-        font-size: 6vw; /* Adjust font size further for smaller devices */
-        padding: 0 5px; /* Further reduce padding for very small screens */
+        font-size: 6vw;
+        padding: 0 5px;
       }
     }
   </style>
@@ -66,19 +62,28 @@
     const stopwatchElement = document.getElementById('stopwatch');
     const messageElement = document.getElementById('message');
 
-    // لحساب الوقت المتبقي حتى منتصف الليل بتوقيت القاهرة
+    let hasShownMessage = localStorage.getItem('hasShownMessage'); // تحقق مما إذا كانت الرسالة قد تم عرضها
+
+    // إذا تم عرض الرسالة سابقًا ولا حاجة للعد التنازلي
+    if (hasShownMessage === 'true') {
+      showMessage();
+    } else {
+      updateCountdown(); // ابدأ العد التنازلي
+    }
+
     function updateCountdown() {
       const cairoTime = new Date().toLocaleString("en-US", { timeZone: "Africa/Cairo" });
       const now = new Date(cairoTime);
 
       const midnight = new Date(now);
-      midnight.setHours(19, 5, 0, 0); // تعيين منتصف الليل
+      midnight.setHours(24, 0, 0, 0); // تعيين منتصف الليل
 
-      const diff = midnight - now; // الفرق بين الوقت الحالي وموعد منتصف الليل
+      const diff = midnight - now;
 
       if (diff <= 0) {
         // عند الوصول إلى منتصف الليل، نعرض الرسائل
-        clearInterval(countdownInterval); // إيقاف العد التنازلي
+        clearInterval(countdownInterval);
+        localStorage.setItem('hasShownMessage', 'true'); // تخزين حالة عرض الرسائل
         showMessage();
         return;
       }
@@ -90,7 +95,6 @@
       stopwatchElement.textContent = `الوقت المتبقي: ${remainingHours}:${remainingMinutes}:${remainingSeconds}`;
     }
 
-    // عرض الرسائل عند الوصول إلى منتصف الليل
     function showMessage() {
       const messages = [
         "ماما",
@@ -110,16 +114,17 @@
         ،شكرًا لكِ على وجودك، ومنتحرمش منكِ أبدًا يا حبيبتي<br>
         ❤️كل عام وأنتِ بخير يا ساكنة القلب والفؤاد`
       ];
+
       let messageIndex = 0;
 
       const messageInterval = setInterval(() => {
         if (messageIndex < messages.length) {
-          messageElement.innerHTML = messages[messageIndex]; // استخدام innerHTML لعرض المحتوى
+          messageElement.innerHTML = messages[messageIndex];
           messageIndex++;
         } else {
           clearInterval(messageInterval);
         }
-      }, 2000); // عرض رسالة جديدة كل 2 ثانية
+      }, 2000); // عرض الرسالة الجديدة كل 2 ثانية
     }
 
     // تحديث العد التنازلي كل ثانية
