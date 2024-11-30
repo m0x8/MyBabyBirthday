@@ -5,6 +5,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Countdown Stopwatch</title>
   <style>
+    /* Reset body margin and padding */
     body {
       display: flex;
       flex-direction: column;
@@ -14,17 +15,46 @@
       margin: 0;
       font-family: Arial, sans-serif;
       background-color: #f0f0f0;
+      text-align: center;
     }
+
+    /* Style the stopwatch display */
     .stopwatch {
-      font-size: 3rem;
+      font-size: 5vw; /* Use viewport width for responsive font size */
       margin-bottom: 20px;
     }
+
+    /* Style the message section */
     .message {
-      font-size: 1.5rem;
+      font-size: 4vw; /* Use viewport width for responsive font size */
       color: #333;
-      text-align: center;
       padding: 0 20px;
       line-height: 1.6;
+      max-width: 90%; /* Ensure message content fits on small screens */
+      word-wrap: break-word;
+    }
+
+    /* Media queries for small screens */
+    @media (max-width: 768px) {
+      .stopwatch {
+        font-size: 8vw; /* Adjust font size for small screens */
+      }
+
+      .message {
+        font-size: 5vw; /* Adjust message font size for mobile */
+        padding: 0 10px; /* Reduce padding on mobile */
+      }
+    }
+
+    @media (max-width: 480px) {
+      .stopwatch {
+        font-size: 10vw; /* Make stopwatch even bigger on very small screens */
+      }
+
+      .message {
+        font-size: 6vw; /* Adjust font size further for smaller devices */
+        padding: 0 5px; /* Further reduce padding for very small screens */
+      }
     }
   </style>
 </head>
@@ -42,7 +72,7 @@
       const now = new Date(cairoTime);
 
       const midnight = new Date(now);
-      midnight.setHours(19, 0, 0, 0); // تعيين منتصف الليل
+      midnight.setHours(19, 2, 0, 0); // تعيين منتصف الليل
 
       const diff = midnight - now; // الفرق بين الوقت الحالي وموعد منتصف الليل
 
