@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="ar">
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -29,25 +29,38 @@
   </style>
 </head>
 <body>
-  <div class="stopwatch" id="stopwatch">5</div>
+  <div class="stopwatch" id="stopwatch"></div>
   <div class="message" id="message"></div>
 
   <script>
     const stopwatchElement = document.getElementById('stopwatch');
     const messageElement = document.getElementById('message');
 
-    let countdown = 5;
+    // لحساب الوقت المتبقي حتى منتصف الليل بتوقيت القاهرة
+    function updateCountdown() {
+      const cairoTime = new Date().toLocaleString("en-US", { timeZone: "Africa/Cairo" });
+      const now = new Date(cairoTime);
 
-    const countdownInterval = setInterval(() => {
-      stopwatchElement.textContent = countdown;
-      if (countdown === 0) {
-        clearInterval(countdownInterval);
+      const midnight = new Date(now);
+      midnight.setHours(24, 0, 0, 0); // تعيين منتصف الليل
+
+      const diff = midnight - now; // الفرق بين الوقت الحالي وموعد منتصف الليل
+
+      if (diff <= 0) {
+        // عند الوصول إلى منتصف الليل، نعرض الرسائل
+        clearInterval(countdownInterval); // إيقاف العد التنازلي
         showMessage();
-      } else {
-        countdown--;
+        return;
       }
-    }, 1000);
 
+      const remainingHours = Math.floor(diff / (1000 * 60 * 60)).toString().padStart(2, '0');
+      const remainingMinutes = Math.floor((diff % (1000 * 60 * 60)) / (1000 * 60)).toString().padStart(2, '0');
+      const remainingSeconds = Math.floor((diff % (1000 * 60)) / 1000).toString().padStart(2, '0');
+
+      stopwatchElement.textContent = `الوقت المتبقي: ${remainingHours}:${remainingMinutes}:${remainingSeconds}`;
+    }
+
+    // عرض الرسائل عند الوصول إلى منتصف الليل
     function showMessage() {
       const messages = [
         "ماما",
@@ -71,13 +84,16 @@
 
       const messageInterval = setInterval(() => {
         if (messageIndex < messages.length) {
-          messageElement.innerHTML = messages[messageIndex]; // Use innerHTML for HTML content
+          messageElement.innerHTML = messages[messageIndex]; // استخدام innerHTML لعرض المحتوى
           messageIndex++;
         } else {
           clearInterval(messageInterval);
         }
-      }, 2000); // Switch messages every 2 seconds
+      }, 2000); // عرض رسالة جديدة كل 2 ثانية
     }
+
+    // تحديث العد التنازلي كل ثانية
+    const countdownInterval = setInterval(updateCountdown, 1000);
   </script>
 </body>
 </html>
