@@ -1,73 +1,83 @@
 <!DOCTYPE html>
-<html lang="ar">
+<html lang="en">
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>What You Think About That</title>
+  <title>Countdown Stopwatch</title>
   <style>
     body {
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      align-items: center;
+      height: 100vh;
+      margin: 0;
       font-family: Arial, sans-serif;
-      text-align: center;
-      margin-top: 100px;
       background-color: #f0f0f0;
     }
-    #current-time {
-      font-size: 2rem;
-      color: #333;
+    .stopwatch {
+      font-size: 3rem;
       margin-bottom: 20px;
     }
-    #countdown {
-      font-size: 3rem;
-      color: #007bff;
-    }
-    #message {
-      font-size: 2.5rem;
-      color: #d9534f;
-      margin-top: 20px;
+    .message {
+      font-size: 1.5rem;
+      color: #333;
+      text-align: center;
+      padding: 0 20px;
+      line-height: 1.6;
     }
   </style>
 </head>
 <body>
-  <h1>What You Think About That</h1>
-  <div id="current-time"></div>
-  <div id="countdown">الوقت المتبقي: --:--:--</div>
-  <div id="message"></div>
+  <div class="stopwatch" id="stopwatch">5</div>
+  <div class="message" id="message"></div>
 
   <script>
-    function updateClockAndCountdown() {
-      // Get current Cairo time
-      const cairoTime = new Date().toLocaleString("en-US", { timeZone: "Africa/Cairo" });
-      const now = new Date(cairoTime);
+    const stopwatchElement = document.getElementById('stopwatch');
+    const messageElement = document.getElementById('message');
 
-      // Display the current time
-      const hours = now.getHours().toString().padStart(2, '0');
-      const minutes = now.getMinutes().toString().padStart(2, '0');
-      const seconds = now.getSeconds().toString().padStart(2, '0');
-      document.getElementById("current-time").textContent = `الوقت الحالي: ${hours}:${minutes}:${seconds}`;
+    let countdown = 5;
 
-      // Calculate the remaining time until midnight
-      const midnight = new Date(now);
-      midnight.setHours(24, 0, 0, 0);
-
-      const diff = midnight - now;
-
-      if (diff <= 0) {
-        // Show the birthday message
-        document.getElementById("countdown").style.display = "none";
-        document.getElementById("message").textContent = "كل سنه وانتي طيب ي عمري";
-        return;
+    const countdownInterval = setInterval(() => {
+      stopwatchElement.textContent = countdown;
+      if (countdown === 0) {
+        clearInterval(countdownInterval);
+        showMessage();
+      } else {
+        countdown--;
       }
+    }, 1000);
 
-      const remainingHours = Math.floor(diff / (1000 * 60 * 60)).toString().padStart(2, '0');
-      const remainingMinutes = Math.floor((diff % (1000 * 60 * 60)) / (1000 * 60)).toString().padStart(2, '0');
-      const remainingSeconds = Math.floor((diff % (1000 * 60)) / 1000).toString().padStart(2, '0');
+    function showMessage() {
+      const messages = [
+        "ماما",
+        "حبيت أقولك",
+        `كُل سنة وأنتِ طيبة يا آية<br>
+        مش عارف أبدأ الكلام منين صراحة، بس ممكن نقول<br>
+        ،دُمتِ لي سكني ومسكني وسكينتي<br>
+        ،دُمتِ لي العالم بأسره<br>
+        ،دُمتِ لي طفلتي وزوجتي وأمي وأغلى الناس لي<br>
+        ،دُمتِ حياتي وسعادتي وراحتي واطمئناني<br>
+        ،كُل سنة وأنتِ طيبة وبخير يا عُمري، وإن شاء الله تكون سنة سعيدة عليكِ<br>
+        ،وتكون مليئة بكل خير لكِ ولنا معكِ<br>
+        (😂زوجك بقا)<br>
+         ،وإن شاء الله السنة الجاية نكون مع بعض في بيت واقولهالك وانتي في حضني<br>
+         ،دي كانت أجمل سنة عشتها في حياتي، كانت الفترة اللي بدأت بوجودك،<br>
+        ،كانوا أجمل ٨ شهور بجد<br>
+        ،شكرًا لكِ على وجودك، ومنتحرمش منكِ أبدًا يا حبيبتي<br>
+        ❤️كل عام وأنتِ بخير يا ساكنة القلب والفؤاد`
+      ];
+      let messageIndex = 0;
 
-      // Update the countdown
-      document.getElementById("countdown").textContent = `الوقت المتبقي: ${remainingHours}:${remainingMinutes}:${remainingSeconds}`;
+      const messageInterval = setInterval(() => {
+        if (messageIndex < messages.length) {
+          messageElement.innerHTML = messages[messageIndex]; // Use innerHTML for HTML content
+          messageIndex++;
+        } else {
+          clearInterval(messageInterval);
+        }
+      }, 2000); // Switch messages every 2 seconds
     }
-
-    // Update the clock and countdown every second
-    setInterval(updateClockAndCountdown, 1000);
   </script>
 </body>
 </html>
